@@ -41,13 +41,31 @@ namespace portfolio_API.Controllers
                     RepoURL = newProject.RepoURL
                 };
 
-                _context.Add(project);
+                _context.Projects.Add(project);
 
                 _context.SaveChanges();
 
                 return Ok("Projeto " + project.Name + " Com o ID " + project.Id + " Criado com sucesso");
             }
             catch(Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpDelete("delete")]
+        public ActionResult Delete([FromQuery] int projectId)
+        {
+            try
+            {
+                var project = _context.Projects.FirstOrDefault(o => o.Id == projectId);
+                _context.Projects.Remove(project);
+
+                _context.SaveChanges();
+
+                return Ok("Projeto Removido");
+            }
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
